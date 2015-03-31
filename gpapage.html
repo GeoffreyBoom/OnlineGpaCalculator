@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<HEAD>
+<script src="gpa_calculator.js"></script>
+<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>GPA Calculator With the Most Drop Shadows</title>
+</HEAD>
+<BODY>
+
+<div class="content">
+  
+  <div class="card">
+    <h1>GPA CALCULATOR</h1>
+    <form id="gpaform">
+      <table>
+        <tr>
+          <td>Course</td><td>Credits</td><td>Grade</td>
+        </tr>
+        <tr>
+          <td><input type="text" placeholder="ex: Comp354"  name="course"></td>
+          <td><input type="text" placeholder="eg: 4"        name="credits"></td>
+          <td><input type="text" placeholder="eg: A+"       name="grade"></td>
+        </tr>
+        <tr>
+          <td><input type="button" value="add" onclick="addGpaData()"></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </form>
+    <div class="card">
+      <table id = "gpadata">
+        <tr>
+          <td><P>Total So Far:    </P></td>
+          <td><P id = "gpafield">0</P></td>
+        </tr>
+      </table>
+      <div class="card"><input type="button" value="Remove All" onclick="removeAll()"></div>
+    </div>
+  </div>
+</div>
+</BODY>
+
