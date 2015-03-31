@@ -1,7 +1,9 @@
 <?php
 
 class GPA{
+  static $numGpa = 0;
   function __construct($course, $credit, $grade){
+    $this->id = self::$numGpa++;
     $this->course = $course;
     $this->credit = $credit;
     $this->grade  = $grade;
@@ -10,29 +12,45 @@ class GPA{
     return "$this->course, $this->credit, $this->grade";
   }
   function toNode(){
-    $node = new DOMDocument();
-    
-
-    $node->loadHTML("<tr id=\"gpa$this->id\" class=\"gpadata\">
-        <td class=\"course\">$this->course</td>
-        <td class=\"credit\">$this->credit</td>
-        <td class=\"grade\" >$this->grade </td>
-        <input type=\"button\" value=\"remove\" name=\"remove\"></input>
-      </tr>");
+    $doc = document::loadDocument();
+    $node = $doc->createElement("tr"); $node->setAttribute("class", "gpadata"); $node->setAttribute("id", "gpa$this->id");
+    $course = $doc->createElement("td", "$this->course"); $course->setAttribute("class", "course"  ); 
+    $credit = $doc->createElement("td", "$this->credit"); $credit->setAttribute("class", "credit"  ); 
+    $grade  = $doc->createElement("td", "$this->grade" ); $grade ->setAttribute("class", "grade"   );
+    $button = $doc->createElement("input"); 
+    $button->setAttribute("type",  "button"); 
+    $button->setAttribute("value", "remove"); $button->setAttribute("onClick", "removeGpa($this->id)");
+    $node->appendChild($course); $node->appendChild($credit); $node->appendChild($button);
+    $node->appendChild($grade);
     return $node;
   }
-  function addToDocument(){
-    
+
+}
+
+class document{
+  static $document;
+  static function loadDocument(){
+    if(isset(self::$document)){
+      return self::$document;
+    }
+    else{
+      self::$document = new DOMDocument();
+      self::$document->loadHTMLFile("gpapage.html");
+      return self::$document;
+    }
+  }
+  static function displayDocument($document){
+    echo self::$document->saveHTML();
+  }
+  static function addToGPA($gpa){
+    $doc = document::loadDocument();
+    $gpaTable = $doc->getElementById("gpadata");
+    $gpaTable->appendChild($gpa->toNode());
   }
 }
-function loadDocument(){
-  $document = new DOMDocument();
-  $document->loadHTMLFile("gpapage.html");
-  return $document;
-}
-function displayDocument($document){
-  echo $document->saveHTML();
-}
+document::addToGPA(new GPA("hello", "2", "A"));
+document::displayDocument(document::loadDocument());
+
 ?>
 <script>
 function GPA(course, credit, grade){ 
