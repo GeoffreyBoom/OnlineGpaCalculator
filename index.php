@@ -27,19 +27,50 @@ class GPA{
     $grade  = $doc->createElement("td", "$this->grade" ); $grade ->setAttribute("class", "grade" );
     $buttonpan = $doc->createElement("td");
     $button = $doc->createElement("input"); 
-    $button->setAttribute("type",  "checkbox"); 
-    $button->setAttribute("value", "remove"); $button->setAttribute("name", "checkbox$this->id");
+    $button->setAttribute("type",  "checkbox"); $button->setAttribute("name", "checkbox");
+    $button->setAttribute("value", "$this->id");   
     $buttonpan->appendChild($button);
     $node->appendChild($course); $node->appendChild($credit); $node->appendChild($grade);
     $node->appendChild($buttonpan);
     return $node;
   }
+  function verifyCourse($course){
+    if($course->length < 15){
+      return $course;
+    }
+    else{
+      return false;
+    }
+  }
 
+  function verifyCredit($credit){
+    if( (int)$credit > 0 && (int)$credit < 10){
+      return (int) $credit;
+    }
+    else{
+      return false;
+    }
+  }
+  
+  function verifyGrade($grade){
+    $potentialGrades = "/^(([a-d]|[A-D])(\+|\-)?|F|f)$/";
+    if(preg_match($potentialGrades, $grade, $matches)){
+      print($matches);
+      return $matches;
+    }
+    else{
+      return false;
+    }
+  } 
 }
 
 class Database{
   static function addToGPA($gpa){
-    $_SESSION["gpa_data"][] = $gpa;
+    $_SESSION["gpa_data"][$gpa->id] = $gpa;
+  }
+  static function removeGpa($id){
+    unset($_SESSION["gpa_data"][$id]);
+    print(isset($_SESSION["gpa_data"][$id]));
   }
   static function getGpaArraySize(){
     return sizeof(Database::getGpaArray());
@@ -77,9 +108,9 @@ class document{
     foreach($data as $gpa){
       document::addToGPA($gpa->toNode());
     }
-    document::addToGPA(document::removeAllButton());
+    document::addToGPA(document::createRemoveButton());
   }
-  static function removeAllButton(){
+  static function createRemoveButton(){
     $doc = document::loadDocument();
     $removePanel  = $doc->createElement("tr");
     $removeAll    = $doc->createElement("td", "Remove All");
@@ -88,14 +119,13 @@ class document{
     $buttontd     = $doc->createElement("td");
     $button       = $doc->createElement("input"); 
     $button->setAttribute("type",  "checkbox"); 
-    $button->setAttribute("value", "remove"); $button->setAttribute("name", "checkboxALL");
+    $button->setAttribute("value", "all"); $button->setAttribute("name", "checkbox");
     $buttontd->appendChild($button);
     $removePanel->appendChild($removeAll);
     $removePanel->appendChild($blank1);
     $removePanel->appendChild($blank2);
     $removePanel->appendChild($buttontd);
     return $removePanel;
-
   }
 
   static function displayDocument($document){
@@ -119,13 +149,21 @@ class document{
         }
       }
       else if(isset($_POST["Remove"])){
-        var_dump($_POST);
-        if(isset($_POST["checkboxALL"])){
-          Database::resetGpaArray();
+        foreach($_POST as $type=>$box){
+          if($type=="checkbox"){
+            if($box == "all"){
+              Database::resetGpaArray();
+            }
+            else{
+              Database::removeGpa((int)$box);
+            }
+          }
         }
       }
     }
-    return $gpa;
+    if($gpa){
+      Database::addToGPA($gpa);
+    }
   }
 }
 
