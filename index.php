@@ -1,9 +1,17 @@
 <?php
 
+function start(){
+  Database::ensureGpaArray();
+  if($gpa = document::handleInput()){
+    Database::addToGPA($gpa);
+  }
+  document::addAllGPA();
+  document::displayDocument(document::loadDocument());
+}
+
 class GPA{
-  static $numGpa = 0;
   function __construct($course, $credit, $grade){
-    $this->id = self::$numGpa++;
+    $this->id = Database::getGpaArraySize();
     $this->course = $course;
     $this->credit = $credit;
     $this->grade  = $grade;
@@ -14,21 +22,45 @@ class GPA{
   function toNode(){
     $doc = document::loadDocument();
     $node = $doc->createElement("tr"); $node->setAttribute("class", "gpadata"); $node->setAttribute("id", "gpa$this->id");
-    $course = $doc->createElement("td", "$this->course"); $course->setAttribute("class", "course"  ); 
-    $credit = $doc->createElement("td", "$this->credit"); $credit->setAttribute("class", "credit"  ); 
-    $grade  = $doc->createElement("td", "$this->grade" ); $grade ->setAttribute("class", "grade"   );
+    $course = $doc->createElement("td", "$this->course"); $course->setAttribute("class", "course"); 
+    $credit = $doc->createElement("td", "$this->credit"); $credit->setAttribute("class", "credit"); 
+    $grade  = $doc->createElement("td", "$this->grade" ); $grade ->setAttribute("class", "grade" );
+    $buttonpan = $doc->createElement("td");
     $button = $doc->createElement("input"); 
-    $button->setAttribute("type",  "button"); 
-    $button->setAttribute("value", "remove"); $button->setAttribute("onClick", "removeGpa($this->id)");
-    $node->appendChild($course); $node->appendChild($credit); $node->appendChild($button);
-    $node->appendChild($grade);
+    $button->setAttribute("type",  "checkbox"); 
+    $button->setAttribute("value", "remove"); $button->setAttribute("name", "checkbox$this->id");
+    $buttonpan->appendChild($button);
+    $node->appendChild($course); $node->appendChild($credit); $node->appendChild($grade);
+    $node->appendChild($buttonpan);
     return $node;
   }
 
 }
 
+class Database{
+  static function addToGPA($gpa){
+    $_SESSION["gpa_data"][] = $gpa;
+  }
+  static function getGpaArraySize(){
+    return sizeof(Database::getGpaArray());
+  }
+  static function getGpaArray(){
+    return $_SESSION["gpa_data"];
+  }
+  static function resetGpaArray(){
+    $_SESSION["gpa_data"] = array();
+  }
+  static function ensureGpaArray(){
+    session_start();
+    if(!isset($_SESSION["gpa_data"])){
+      $_SESSION["gpa_data"] = array();
+    }
+  }
+}
+
 class document{
   static $document;
+  
   static function loadDocument(){
     if(isset(self::$document)){
       return self::$document;
@@ -39,17 +71,68 @@ class document{
       return self::$document;
     }
   }
+ 
+  static function addAllGPA(){
+    $data = Database::getGpaArray();
+    foreach($data as $gpa){
+      document::addToGPA($gpa->toNode());
+    }
+    document::addToGPA(document::removeAllButton());
+  }
+  static function removeAllButton(){
+    $doc = document::loadDocument();
+    $removePanel  = $doc->createElement("tr");
+    $removeAll    = $doc->createElement("td", "Remove All");
+    $blank1       = $doc->createElement("td");
+    $blank2       = $doc->createElement("td");
+    $buttontd     = $doc->createElement("td");
+    $button       = $doc->createElement("input"); 
+    $button->setAttribute("type",  "checkbox"); 
+    $button->setAttribute("value", "remove"); $button->setAttribute("name", "checkboxALL");
+    $buttontd->appendChild($button);
+    $removePanel->appendChild($removeAll);
+    $removePanel->appendChild($blank1);
+    $removePanel->appendChild($blank2);
+    $removePanel->appendChild($buttontd);
+    return $removePanel;
+
+  }
+
   static function displayDocument($document){
     echo self::$document->saveHTML();
   }
+  
   static function addToGPA($gpa){
     $doc = document::loadDocument();
     $gpaTable = $doc->getElementById("gpadata");
-    $gpaTable->appendChild($gpa->toNode());
+    $gpaTable->appendChild($gpa);
+  }
+  
+  static function handleInput(){
+    $gpa = null;
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if(isset($_POST["Add"])){
+        $course = $_POST["course"]; $credit = $_POST["credits"]; $grade = $_POST["grade"];
+        $_POST = array();
+        if($course && $credit && $grade){
+          $gpa = new GPA($course, $credit, $grade);
+        }
+      }
+      else if(isset($_POST["Remove"])){
+        var_dump($_POST);
+        if(isset($_POST["checkboxALL"])){
+          Database::resetGpaArray();
+        }
+      }
+    }
+    return $gpa;
   }
 }
-document::addToGPA(new GPA("hello", "2", "A"));
-document::displayDocument(document::loadDocument());
+
+
+start();
+
+
 
 ?>
 <script>
@@ -166,6 +249,7 @@ function getNewGpaData(){
         form.credits.value, 
         form.grade.value);
   if(!gpaData.validate()){
+    alert("You choose No."); 
     return false;
   }
   form.course.value = form.credits.value = form.grade.value = "";

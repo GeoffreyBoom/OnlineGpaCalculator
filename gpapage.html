@@ -11,32 +11,34 @@
   
   <div class="card">
     <h1>GPA CALCULATOR</h1>
-    <form id="gpaform">
+    <form id="gpaform" method="POST" action="index.php">
       <table>
         <tr>
           <td>Course</td><td>Credits</td><td>Grade</td>
         </tr>
         <tr>
-          <td><input type="text" placeholder="ex: Comp354"  name="course"></td>
-          <td><input type="text" placeholder="eg: 4"        name="credits"></td>
-          <td><input type="text" placeholder="eg: A+"       name="grade"></td>
+          <td><input type="text" placeholder="ex: Comp354"  name="course"  id="courseform"></td>
+          <td><input type="text" placeholder="eg: 4"        name="credits" id="creditform"></td>
+          <td><input type="text" placeholder="eg: A+"       name="grade"   id="gradeform" ></td>
         </tr>
         <tr>
-          <td><input type="button" value="add" onclick="addGpaData()"></td>
+          <td><input type="submit" value="Add" name="Add"> </td>
           <td></td>
           <td></td>
         </tr>
       </table>
     </form>
     <div class="card">
-      <table>
-        <tbody id="gpadata">
-        <tr>
-          <td><P>Total So Far:    </P></td>
-          <td><P id = "gpafield">0</P></td>
-        </tr>
-      </table>
-      <div class="card"><input type="button" value="Remove All" onclick="removeAll()"></div>
+      <form method="GET">
+        <table>
+          <tbody id="gpadata">
+          <tr>
+            <td><P>Total So Far:    </P></td>
+            <td><P id = "gpafield">0</P></td>
+          </tr>
+        </table>
+        <div class="card"><input type="submit" value="Remove" name="Remove" ></div>
+      </form>
     </div>
   </div>
 </div>
