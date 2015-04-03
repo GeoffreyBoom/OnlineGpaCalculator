@@ -1,5 +1,9 @@
 <?php
 
+require 'gpa.php';
+require 'calculator.php';
+require 'document.php';
+
 session_start();
 function start(){
   print("hello");
@@ -59,11 +63,6 @@ class LoginManager{
     return User($username, $password);
   }
 }
-
-require 'gpa.php';
-require 'calculator.php';
-require 'document.php';
-require 'calculator.php';
 
 class User{
   function __construct($username, $password, $userdata = null){
