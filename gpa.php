@@ -1,3 +1,4 @@
+<?php
 class GPA{
   function __construct($course, $credit, $grade){
     $this->id = Database::getGpaArraySize();
@@ -57,3 +58,4 @@ class GPA{
     }
   } 
 }
+?>

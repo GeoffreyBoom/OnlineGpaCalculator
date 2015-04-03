@@ -1,3 +1,4 @@
+<?php
 class document{
   static $document;
   static function loadDocument(){
@@ -123,3 +124,4 @@ class document{
     return $column;
   }
 }
+?>

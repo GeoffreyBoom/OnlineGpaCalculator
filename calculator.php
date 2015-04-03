@@ -1,3 +1,4 @@
+<?php
 class calculator{
   static function calculateGpa(){
     $gpaArray = Database::getGpaArray();
@@ -71,3 +72,4 @@ class calculator{
     }
   }
 }
+?>
