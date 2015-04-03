@@ -2,6 +2,8 @@
 
 require_once 'gpa.php'
 require_once 'calculator.php'
+require_once 'document.php'
+require_once 'calculator.php'
 session_destroy();
 session_start();
 function start(){
