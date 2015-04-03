@@ -1,10 +1,5 @@
 <?php
 
-require_once 'gpa.php'
-require_once 'calculator.php'
-require_once 'document.php'
-require_once 'calculator.php'
-session_destroy();
 session_start();
 function start(){
   print("hello");
@@ -39,7 +34,7 @@ class LoginManager{
     //if the user has returned from a login page
     //and is a previous user, return their data from
     //the file system
-    if(isset($username = $_POST["OLD_USERNAME"]) && isset($password = $_POST["OLD_PASSWORD"])){
+    if(isset($_POST["OLD_USERNAME"]) && isset($_POST["OLD_PASSWORD"])){
       $_SESSION["USER"] = LoginManager::getOldUser($username, $password);
       return getCurrentUser();
     }
@@ -61,9 +56,14 @@ class LoginManager{
     return User($username, $password);
   }
   static function getNewUser($username, $password){
-    return User($username, $password)
+    return User($username, $password);
   }
 }
+
+require 'gpa.php';
+require 'calculator.php';
+require 'document.php';
+require 'calculator.php';
 
 class User{
   function __construct($username, $password, $userdata = null){
