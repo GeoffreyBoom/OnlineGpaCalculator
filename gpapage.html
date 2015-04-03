@@ -11,10 +11,12 @@
   
   <div class="card">
     <h1>GPA CALCULATOR</h1>
-    <form id="gpaform" method="POST" action="index.php">
+    <form id="gpaform" method="POST">
       <table>
         <tr>
           <td>Course</td><td>Credits</td><td>Grade</td>
+        </tr>
+        <tr id="errorfield"> 
         </tr>
         <tr>
           <td><input type="text" placeholder="ex: Comp354"  name="course"  id="courseform"></td>
@@ -34,7 +36,7 @@
           <tbody id="gpadata">
           <tr>
             <td><P>Total So Far:    </P></td>
-            <td><P id = "gpafield">0</P></td>
+            <td><div id = "gpafield"></div></td>
           </tr>
         </table>
         <div class="card"><input type="submit" value="Remove" name="Remove" ></div>

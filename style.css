@@ -8,7 +8,7 @@ body{
   position:relative;
 }
 .card{
-  max-width:600px;
+  max-width:800px;
   min-width:500px;
   min-height:20px;
   background-color:#00B8D0;
@@ -56,4 +56,9 @@ body{
   border:0px;
   padding:0px;
 }
+.error {
+  color: #D8000C;
+  background-color: #FFBABA;
+  background-image: url('error.png');
 
+}
