@@ -2,7 +2,7 @@
 
 session_start();
 function start(){
-  $login = LoginManager::currentUser();
+  $login = LoginManager::getCurrentUser();
   if(!$login){
     LoginManager::requireLogin();
   }
@@ -18,20 +18,36 @@ function start(){
 }
 
 class LoginManager{
-  function getUser(){
+  //a function to return the current user
+  static function getCurrentUser(){
+    //if the user already exists in the session data, return the user
     if(isset($_SESSION["USER"])){
       return $_SESSION["USER"];
     }
+    //return null otherwise
     else{
       return null;
     }
   }
-
-  function requireLogin(){
-    if(isset($POST["OLD_USERNAME"])){
-      if(isset($POST["OLD_PASSWORD"])){
-        $
+  static function requireLogin(){
+    //if the user has returned from a login page
+    //and is a previous user, return their data from
+    //the file system
+    if(isset($_POST["OLD_USERNAME"])){
+      $user = LoginManager::getOldUser();
+    }
+    //if the user has returned from the login page
+    //and is a new user, create new data for them
+    else if(isset($_POST["NEW_USERNAME"])){
+      if(isset($_POST["NEW_PASSWORD"])){
+        $user = LoginManager::createNewUser();
       }
+    }
+    //if the user hasn't logged in, force them to log in.
+    else{
+      $document = new DOMDocument();
+      $document->loadHTMLFile("login.html");
+      echo $document->saveHTML();
     }
   }
 }
@@ -43,7 +59,7 @@ class User{
     if($userdata == null){
       $userdata = User::getUserData($username, $password);
     }
-    $this->userdata = $userdata
+    $this->userdata = $userdata;
   }
 }
 
