@@ -6,10 +6,9 @@ require 'document.php';
 
 session_start();
 function start(){
-  print("hello");
   $login = LoginManager::getCurrentUser();
   if(!$login || !$LoginManager::catchLogin()){
-    LoginManager::requireLogin();
+    LoginManager::requestLogin();
   }
   else{
     Database::ensureGpaArray();
