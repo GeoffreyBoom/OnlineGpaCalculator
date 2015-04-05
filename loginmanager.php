@@ -1,6 +1,7 @@
 <?php
 
 require_once 'debug.php';
+require_once 'user.php';
 
 class LoginManager{
   //returns user info if previous user logged in, null otherwise
@@ -27,6 +28,28 @@ class LoginManager{
     $document = new DOMDocument();
     $document->loadHTMLFile("login.html");
     echo $document->saveHTML();
+  }
+
+
+  static function login(){
+    if($user = LoginManager::preUserLoginInfo()){
+      Debug::message("set previous username and password");
+      User::setUser($user['name'], $user['pass']);
+    }
+    else if($user = LoginManager::newUserLoginInfo()){
+      Debug::message("set new username and password");
+      User::setUser($user['name'], $user['pass']);
+    }
+    if(!is_null(User::getUser())){
+      return true;
+    }
+    else{
+      LoginManager::requestLogin();
+      return false;
+    }
+  }
+  static function logout(){
+    User::unsetUser();
   }
 }
 ?>
