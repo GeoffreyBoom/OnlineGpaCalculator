@@ -8,7 +8,12 @@ class LoginManager{
   static function preUserLoginInfo(){
     Debug::message("checking for previous user's login info");
     if(isset($_POST["OLD_USERNAME"]) && isset($_POST["OLD_PASSWORD"])){
-      return array("name" => $_POST["OLD_USERNAME"], "pass" => $_POST["OLD_PASSWORD"]);
+      $username = $_POST["OLD_USERNAME"];
+      $password = $_POST["OLD_PASSWORD"];
+      
+
+      return array("name" => $_POST["OLD_USERNAME"],
+          "pass" => $_POST["OLD_PASSWORD"]);
     }
     else{
       return null;
@@ -22,6 +27,12 @@ class LoginManager{
     else{
       return null;
     }
+  }
+  static function validateUsername($user){
+    
+  }
+  static function validatePassword($pass){
+
   }
   static function requestLogin(){
     //if the user hasn't logged in, force them to log in.

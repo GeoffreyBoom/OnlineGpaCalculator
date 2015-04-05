@@ -10,10 +10,9 @@ require_once 'loginmanager.php';
 session_start();
 function start(){
   if(isset($_GET["logout"])){
-    var_dump($_GET["logout"]);
     if($_GET["logout"] == "true"){
       LoginManager::logout();
-      header('Location: http://localhost/website/' );
+      header('Location: ./');
     }
   }
   Debug::message("starting program");

@@ -11,7 +11,7 @@
       <form method="POST" >
         <table>
           <tr>Log in:</tr>
-          <tr><td>Username:</td> <td><input type="text" required name="OLD_USERNAME"></td></tr>
+          <tr><td>Username:</td> <td><input type="text" required name="OLD_USERNAME" pattern="[a-z0-9]{3,16}"></td></tr>
           <tr><td>Password:</td> <td><input type="password" required name="OLD_PASSWORD"></td></tr>
           <tr><td><input type="submit" value="submit"></td></tr>
         </table>
