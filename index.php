@@ -22,21 +22,6 @@ class test{
   static $testing = true;
 }
 
-
-
-class User{
-  function __construct($username, $password, $userdata = null){
-    if(test::$testing) print("creating user with $username, $password");
-    $this->username = $username;
-    $this->password = $password;
-    if($userdata == null){
-      $userdata = User::getUserData($username, $password);
-    }
-    $this->userdata = $userdata;
-  }
-}
-
-
 class Database{
   static function addToGPA($gpa){
     $_SESSION["gpa_data"][$gpa->id] = $gpa;
