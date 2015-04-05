@@ -13,7 +13,7 @@ function start(){
     var_dump($_GET["logout"]);
     if($_GET["logout"] == "true"){
       LoginManager::logout();
-
+      header('Location: http://localhost/website/' );
     }
   }
   Debug::message("starting program");
