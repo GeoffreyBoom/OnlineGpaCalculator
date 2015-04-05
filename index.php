@@ -1,14 +1,23 @@
 <?php
 
-require 'gpa.php';
-require 'calculator.php';
-require 'document.php';
+require_once 'gpa.php';
+require_once 'calculator.php';
+require_once 'document.php';
+require_once 'user.php';
+require_once 'debug.php';
+require_once 'login.php';
 
 session_start();
 
 function start(){
   if(test::$testing) print("starting program<br>");
-  if (test::$testing) print("user found, displaying Gpa Calculator<br>");
+  if(User::getUser()){
+    if (test::$testing) print("user found, displaying Gpa Calculator<br>");
+    Debug::message(User::getUser()->username);
+  }
+  else{
+    loginStart();
+  }
   Database::ensureGpaArray();
   if($gpa = document::handleInput()){
     Database::addToGPA($gpa);
@@ -44,13 +53,6 @@ class Database{
     }
   }    
 }
-
-
-
-
 start();
-
-
-
 ?>
 

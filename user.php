@@ -1,7 +1,5 @@
 <?php
 
-error_reporting(-1);
-ini_set('display_errors', 'On');
 
 require_once 'debug.php';
 class User{
@@ -14,7 +12,7 @@ class User{
     }
   }
   static function setUser($username, $password){
-    $userdata = getUserData($username, $password);
+    $userdata = User::getUserData($username, $password);
     $_SESSION["USER"] = new User($username, $password, $userdata);
     return $_SESSION["USER"];
   }
@@ -27,9 +25,10 @@ class User{
       $userdata = User::getUserData($username, $password);
     }
     $this->userdata = $userdata;
+    $this->storeUser();
   }
   static function getUserData($username, $password){
-    $user = unserialize((file_get_contents("$username.txt")));
+    $user = unserialize((file_get_contents("userdata/$username.txt")));
     if($user && isset($user->userdata)){
       return $user->userdata;
     }
@@ -37,8 +36,17 @@ class User{
       return [];
     }
   }
-  static function storeUserData(){
-    file_put_contents("$username.txt",serialize($this));
+  static function retrieveUser($username, $password){
+    if(file_exists("userdata/$username.txt")){
+      return unserialize((file_get_contents("userdata/$username.txt")));
+    }
+  }
+  function storeUser(){
+    $dir = "userdata";
+    if ( !file_exists($dir) ) {
+      mkdir ($dir, 0744);
+    }
+    file_put_contents("$dir/$this->username.txt",serialize($this));
   }
 }
 ?>
