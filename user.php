@@ -22,19 +22,36 @@ class User{
     $this->username = $username;
     $this->password = $password;
     if($userdata == null){
-      $userdata = User::getUserData($username, $password);
+      $userdata = $this->getUserData();
     }
     $this->userdata = $userdata;
     $this->storeUser();
   }
-  static function getUserData($username, $password){
-    $user = unserialize((file_get_contents("userdata/$username.txt")));
+  function addUserData($gpa){
+    $data = $this->getUserData();
+    $data[$gpa->id] = $gpa;
+    $this->setUserData($data);
+  }
+  function removeUserData($id){
+    $data = $this->getUserData();
+    unset($data[$id]);
+    $this->setUserData($data);
+  }
+  function clearUserData(){
+    $this->setUserData([]);
+  }
+  function getUserData(){
+    $user = User::retrieveUser($this->username,$this->password);
     if($user && isset($user->userdata)){
       return $user->userdata;
     }
     else{
       return [];
     }
+  }
+  function setUserData($data){
+    $this->userdata = $data;
+    $this->storeUser();
   }
   static function retrieveUser($username, $password){
     if(file_exists("userdata/$username.txt")){

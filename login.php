@@ -4,6 +4,7 @@ require_once 'loginmanager.php';
 require_once 'user.php';
 require_once 'debug.php';
 
+session_start();
 function loginStart(){
   
   if($user = LoginManager::preUserLoginInfo()){

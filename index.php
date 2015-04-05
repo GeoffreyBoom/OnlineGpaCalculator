@@ -10,10 +10,9 @@ require_once 'login.php';
 session_start();
 
 function start(){
-  if(test::$testing) print("starting program<br>");
+  Debug::message("starting program");
   if(User::getUser()){
-    if (test::$testing) print("user found, displaying Gpa Calculator<br>");
-    Debug::message(User::getUser()->username);
+    Debug::message("user found, displaying Gpa Calculator");
   }
   else{
     loginStart();
@@ -27,30 +26,24 @@ function start(){
   document::displayDocument(document::loadDocument());
 }
 
-class test{
-  static $testing = true;
-}
 
 class Database{
   static function addToGPA($gpa){
-    $_SESSION["gpa_data"][$gpa->id] = $gpa;
+    User::getUser()->addUserData($gpa);
   }
   static function removeGpa($id){
-    unset($_SESSION["gpa_data"][$id]);
+    User::getUser()->removeUserData($id);
   }
   static function getGpaArraySize(){
     return sizeof(Database::getGpaArray());
   }
   static function getGpaArray(){
-    return $_SESSION["gpa_data"];
+    return $_SESSION["USER"]->userdata;
   }
   static function resetGpaArray(){
-    $_SESSION["gpa_data"] = array();
+    User::getUser()->clearUserData();
   }
   static function ensureGpaArray(){
-    if(!isset($_SESSION["gpa_data"])){
-      $_SESSION["gpa_data"] = array();
-    }
   }    
 }
 start();
