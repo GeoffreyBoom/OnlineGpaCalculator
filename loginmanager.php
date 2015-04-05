@@ -7,7 +7,7 @@ class LoginManager{
   static function preUserLoginInfo(){
     Debug::message("checking for previous user's login info");
     if(isset($_POST["OLD_USERNAME"]) && isset($_POST["OLD_PASSWORD"])){
-      return ["name" => $_POST["OLD_USERNAME"], "pass" => $_POST["OLD_PASSWORD"]];
+      return array("name" => $_POST["OLD_USERNAME"], "pass" => $_POST["OLD_PASSWORD"]);
     }
     else{
       return null;
@@ -16,7 +16,7 @@ class LoginManager{
   static function newUserLoginInfo(){
     Debug::message("checking for new user's login info");
     if(isset($_POST["NEW_USERNAME"]) && isset($_POST["NEW_PASSWORD"])){
-      return ["name" => $_POST["NEW_USERNAME"], "pass" => $_POST["NEW_PASSWORD"]];
+      return array("name" => $_POST["NEW_USERNAME"], "pass" => $_POST["NEW_PASSWORD"]);
     }
     else{
       return null;
