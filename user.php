@@ -12,9 +12,11 @@ class User{
     }
   }
   static function setUser($username, $password){
-    $userdata = User::getUserData($username, $password);
-    $_SESSION["USER"] = new User($username, $password, $userdata);
+    $_SESSION["USER"] = new User($username, $password);
     return $_SESSION["USER"];
+  }
+  static function unsetUser(){
+    unset($_SESSION["USER"]);
   }
   private function __construct($username, $password, $userdata = null){
     Debug::message("creating user with $username, $password");
