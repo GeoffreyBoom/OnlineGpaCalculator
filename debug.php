@@ -1,7 +1,7 @@
 <?php
 
 class Debug{
-  static $debug = true;
+  static $debug = false;
   static function message($message){
     if(Debug::$debug) print $message."<br>";
   }

@@ -10,9 +10,9 @@ class LoginManager{
     if(isset($_POST["OLD_USERNAME"]) && isset($_POST["OLD_PASSWORD"])){
       $user = $_POST["OLD_USERNAME"]; $pass = $_POST["OLD_PASSWORD"];
       $userCheck = LoginManager::checkUser($user);
-      $passCheck = LoginManager::checkPass($pass);
+      $passCheck = LoginManager::checkPass($user, $pass);
       if($userCheck && $passCheck){
-        return ["name" => $user, "pass" => $pass];
+        return array("name" => $user, "pass" => $pass);
       }
     }
     return null;
@@ -22,12 +22,18 @@ class LoginManager{
     if(isset($_POST["NEW_USERNAME"]) && isset($_POST["NEW_PASSWORD"])){
       $user = $_POST["NEW_USERNAME"]; $pass = $_POST["NEW_USERNAME"];
       if(!LoginManager::checkUser($user)){
-        return ["name" => $_POST["NEW_USERNAME"], "pass" => $_POST["NEW_PASSWORD"]];
+        return array("name" => $_POST["NEW_USERNAME"], "pass" => $_POST["NEW_PASSWORD"]);
       }
     }
     else{
       return null;
     }
+  }
+  static function validateUsername($user){
+    
+  }
+  static function validatePassword($pass){
+
   }
   static function requestLogin(){
     //if the user hasn't logged in, force them to log in.

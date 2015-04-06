@@ -40,7 +40,8 @@ class User{
     $this->setUserData($data);
   }
   function clearUserData(){
-    $this->setUserData([]);
+    $empt = array();
+    $this->setUserData($empt);
   }
   function getUserData(){
     $user = User::retrieveUser($this->username,$this->password);
@@ -48,7 +49,7 @@ class User{
       return $user->userdata;
     }
     else{
-      return [];
+      return array();
     }
   }
   function setUserData($data){
