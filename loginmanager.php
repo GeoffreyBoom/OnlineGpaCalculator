@@ -20,8 +20,10 @@ class LoginManager{
   static function newUserLoginInfo(){
     Debug::message("checking for new user's login info");
     if(isset($_POST["NEW_USERNAME"]) && isset($_POST["NEW_PASSWORD"])){
-      $user = $_POST["NEW_USERNAME"]; $pass = $_POST["NEW_USERNAME"];
-      if(!LoginManager::checkUser($user)){
+      $user = $_POST["NEW_USERNAME"]; $pass = $_POST["NEW_PASSWORD"];
+      if((!LoginManager::checkUser($user))
+          && LoginManager::validatePassword($pass)
+          && LoginManager::validateUsername($user)){
         return array("name" => $_POST["NEW_USERNAME"], "pass" => $_POST["NEW_PASSWORD"]);
       }
     }
@@ -30,22 +32,14 @@ class LoginManager{
     }
   }
   static function validateUsername($user){
-    
+    return preg_match("/[a-z0-9]{3,16}/", $user);
   }
   static function validatePassword($pass){
+    return preg_match("/[a-z0-9]{3,16}/", $pass);
+  }
 
-  }
-  static function requestLogin(){
-    //if the user hasn't logged in, force them to log in.
-    $document = new DOMDocument();
-    $document->loadHTMLFile("login.html");
-    echo $document->saveHTML();
-  }
   static function checkUser($user){
-    if(file_exists("userdata/$user.txt")){
-      return true;
-    }
-    return false;
+    return (file_exists("userdata/$user.txt"));
   }
   static function checkPass($username, $pass){
     if($user = User::retrieveUser($username, $pass)){
@@ -54,6 +48,12 @@ class LoginManager{
       }
     }
     return false;
+  }
+  static function requestLogin(){
+    //if the user hasn't logged in, force them to log in.
+    $document = new DOMDocument();
+    $document->loadHTMLFile("login.html");
+    echo $document->saveHTML();
   }
   static function login(){
     if($user = LoginManager::preUserLoginInfo()){
