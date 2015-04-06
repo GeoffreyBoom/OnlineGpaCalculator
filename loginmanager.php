@@ -8,11 +8,14 @@ class LoginManager{
   static function preUserLoginInfo(){
     Debug::message("checking for previous user's login info");
     if(isset($_POST["OLD_USERNAME"]) && isset($_POST["OLD_PASSWORD"])){
-      return ["name" => $_POST["OLD_USERNAME"], "pass" => $_POST["OLD_PASSWORD"]];
+      $user = $_POST["OLD_USERNAME"]; $pass = $_POST["OLD_PASSWORD"];
+      $userCheck = LoginManager::checkUser($user);
+      $passCheck = LoginManager::checkPass($pass);
+      if($userCheck && $passCheck){
+        return ["name" => $user, "pass" => $pass];
+      }
     }
-    else{
-      return null;
-    }
+    return null;
   }
   static function newUserLoginInfo(){
     Debug::message("checking for new user's login info");
@@ -29,8 +32,12 @@ class LoginManager{
     $document->loadHTMLFile("login.html");
     echo $document->saveHTML();
   }
-
-
+  static function checkUser($user){
+  
+  }
+  static function checkPass($pass){
+  
+  }
   static function login(){
     if($user = LoginManager::preUserLoginInfo()){
       Debug::message("set previous username and password");
