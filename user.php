@@ -59,6 +59,9 @@ class User{
     if(file_exists("userdata/$username.txt")){
       return unserialize((file_get_contents("userdata/$username.txt")));
     }
+    else{
+      return null;
+    }
   }
   function storeUser(){
     $dir = "userdata";

@@ -20,7 +20,10 @@ class LoginManager{
   static function newUserLoginInfo(){
     Debug::message("checking for new user's login info");
     if(isset($_POST["NEW_USERNAME"]) && isset($_POST["NEW_PASSWORD"])){
-      return ["name" => $_POST["NEW_USERNAME"], "pass" => $_POST["NEW_PASSWORD"]];
+      $user = $_POST["NEW_USERNAME"]; $pass = $_POST["NEW_USERNAME"];
+      if(!LoginManager::checkUser($user)){
+        return ["name" => $_POST["NEW_USERNAME"], "pass" => $_POST["NEW_PASSWORD"]];
+      }
     }
     else{
       return null;
@@ -33,10 +36,18 @@ class LoginManager{
     echo $document->saveHTML();
   }
   static function checkUser($user){
-  
+    if(file_exists("userdata/$user.txt")){
+      return true;
+    }
+    return false;
   }
-  static function checkPass($pass){
-  
+  static function checkPass($username, $pass){
+    if($user = User::retrieveUser($username, $pass)){
+      if($user->password == $pass){
+        return true;
+      }
+    }
+    return false;
   }
   static function login(){
     if($user = LoginManager::preUserLoginInfo()){
