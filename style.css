@@ -62,3 +62,7 @@ body{
   background-image: url('error.png');
 
 }
+.required{
+  color: #D8000C;
+  display: inline;
+}
