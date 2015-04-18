@@ -7,12 +7,14 @@
 </head>
 <body>
   <div class="card">
+    <div id="login_error">
+    </div>
     <div class="card">
       <form method="POST" >
         <table>
           <tr>Log in:</tr>
           <tr><td>Username:</td> <td><input type="text" required name="OLD_USERNAME" pattern="[a-z0-9]{3,16}"></td></tr>
-          <tr><td>Password:</td> <td><input type="password" required name="OLD_PASSWORD"></td></tr>
+          <tr><td>Password:</td> <td><input type="password" required name="OLD_PASSWORD" pattern="[a-z0-9]{3,16}"></td></tr>
           <tr><td><input type="submit" value="submit"></td></tr>
         </table>
       </form>
@@ -22,10 +24,10 @@
       <form method="post">
         <table>
           <tr>
-            <td><div class="required">*</div>Username:</td> <td><input type="text" required name="NEW_USERNAME"></td>
+            <td><div class="required">*</div>Username:</td> <td><input type="text" required name="NEW_USERNAME" pattern="[a-z0-9]{3,16}"></td>
           </tr>
           <tr>
-            <td><div class="required">*</div>Password:</td><td><input type="password" required name="NEW_PASSWORD"></td>
+            <td><div class="required">*</div>Password:</td><td><input type="password" required name="NEW_PASSWORD" pattern="[a-z0-9]{3,16}"></td>
           </tr>
           <tr>
             <td>Name of Your First Spouse's second cousin first removed:</td><td><input type="text"></td>

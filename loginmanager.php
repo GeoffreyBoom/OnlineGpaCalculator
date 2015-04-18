@@ -4,6 +4,7 @@ require_once 'debug.php';
 require_once 'user.php';
 
 class LoginManager{
+  static $loginPage; 
   //returns user info if previous user logged in, null otherwise
   static function preUserLoginInfo(){
     Debug::message("checking for previous user's login info");
@@ -11,8 +12,12 @@ class LoginManager{
       $user = $_POST["OLD_USERNAME"]; $pass = $_POST["OLD_PASSWORD"];
       $userCheck = LoginManager::checkUser($user);
       $passCheck = LoginManager::checkPass($user, $pass);
-      if($userCheck && $passCheck){
+      $validity = LoginManager::validatePassword($pass) && LoginManager::validateUsername($user);
+      if($userCheck && $passCheck && $validity){
         return array("name" => $user, "pass" => $pass);
+      }
+      else if(!$userCheck || !$passCheck){
+        LoginManager::new_error("Username does not exist or Password incorrect.");
       }
     }
     return null;
@@ -26,16 +31,31 @@ class LoginManager{
           && LoginManager::validateUsername($user)){
         return array("name" => $_POST["NEW_USERNAME"], "pass" => $_POST["NEW_PASSWORD"]);
       }
+      else{
+        if(LoginManager::checkUser($user)){
+          LoginManager::new_error("Username already exists");
+        }
+      }
     }
     else{
       return null;
     }
   }
   static function validateUsername($user){
-    return preg_match("/[a-z0-9]{3,16}/", $user);
+    if($match = preg_match("/[a-z0-9]{3,16}/", $user))
+      return $match;
+    else{
+      LoginManager::new_error("Username not valid. must be 3-16 alphanumeric characters.");
+      return null;
+    }
   }
   static function validatePassword($pass){
-    return preg_match("/[a-z0-9]{3,16}/", $pass);
+    if($match = preg_match("/[a-z0-9]{3,16}/", $pass))
+      return $match;
+    else{
+      LoginManager::new_error("Password not valid. must be 3-16 alphanumeric characters.");
+      return null;
+    }
   }
 
   static function checkUser($user){
@@ -49,10 +69,19 @@ class LoginManager{
     }
     return false;
   }
+  static function getLoginPage(){
+    if(isset(self::$loginPage)){
+      return self::$loginPage;
+    }
+    else{
+      self::$loginPage = new DOMDocument();
+      self::$loginPage->loadHTMLFile("login.html");
+      return self::$loginPage;
+    }
+  }
   static function requestLogin(){
     //if the user hasn't logged in, force them to log in.
-    $document = new DOMDocument();
-    $document->loadHTMLFile("login.html");
+    $document = LoginManager::getLoginPage();
     echo $document->saveHTML();
   }
   static function login(){
@@ -74,6 +103,12 @@ class LoginManager{
   }
   static function logout(){
     User::unsetUser();
+  }
+  static function new_error($message){
+    $doc = LoginManager::getLoginPage();
+    $error = $doc->getElementById("login_error");
+    $message = $doc->createTextNode($message);
+    $error->appendChild($message);
   }
 }
 ?>
